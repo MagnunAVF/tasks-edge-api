@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import type { Connection } from '@planetscale/database'
 
 import { checkHealth } from './handlers/health'
 import {
@@ -9,9 +10,29 @@ import {
   getTasks,
   updateTaskById,
 } from './handlers/tasks'
+import { connectDB } from './db/client'
 
-const app = new Hono()
+// Env vars
+type Variables = {
+  DATABASE_HOST: string
+  DATABASE_USERNAME: string
+  DATABASE_PASSWORD: string
+  dbConn: Connection
+}
 
+const app = new Hono<{ Variables: Variables }>()
+
+// Middleware
+app.use('*', async (c, next) => {
+  // before handler
+  connectDB(c)
+
+  await next()
+
+  // after handler
+})
+
+// Routes
 app.get('/', checkHealth)
 
 app.get('/tasks', getTasks)

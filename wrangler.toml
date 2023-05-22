@@ -1,2 +1,7 @@
 name = "tasks-edge-api"
 compatibility_date = "2023-01-01"
+
+[vars]
+DATABASE_HOST = "host"
+DATABASE_USERNAME = "user"
+DATABASE_PASSWORD = "password"
