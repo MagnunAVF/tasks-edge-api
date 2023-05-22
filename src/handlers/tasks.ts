@@ -16,8 +16,19 @@ export async function getTasks(c: Context) {
 
 export async function getTaskById(c: Context) {
   const id = c.req.param('id')
+  const query = `SELECT * FROM tasks WHERE id=${id} LIMIT 1;`
+  const data = await c.get('dbConn').execute(query)
 
-  return c.json({ route: 'get task', id })
+  if (data.rows.length === 0) {
+    c.status(404)
+
+    return c.json({ error: 'Task not found' })
+  } else {
+    const task = data.rows[0]
+    task.done = task.done === 1
+
+    return c.json(task)
+  }
 }
 
 export async function createTask(c: Context) {
