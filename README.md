@@ -22,6 +22,12 @@ npm install
 npm run dev
 ```
 
+## Format and lint
+
+```
+npm run format && npm run lint
+```
+
 ## Deploy
 
 ```
