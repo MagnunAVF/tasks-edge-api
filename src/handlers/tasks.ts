@@ -1,7 +1,17 @@
 import { Context } from 'hono'
+import { Task } from '../models/task'
 
 export async function getTasks(c: Context) {
-  return c.json({ route: 'get tasks' })
+  const data = await c.get('dbConn').execute('SELECT * FROM tasks;')
+  let tasks = data.rows
+
+  tasks = tasks.map((task: Task) => {
+    const done = task.done === 1
+
+    return { ...task, done }
+  })
+
+  return c.json(tasks)
 }
 
 export async function getTaskById(c: Context) {
