@@ -34,7 +34,13 @@ export async function getTaskById(c: Context) {
 export async function createTask(c: Context) {
   const body = await c.req.json()
 
-  return c.json({ route: 'create task', body })
+  const query = `INSERT INTO tasks (title, description, priority, done) VALUES \
+    ('${body.title}', '${body.description}', ${body.priority}, ${body.done});`
+  const data = await c.get('dbConn').execute(query)
+  const id = parseInt(data.insertId)
+  const task = { ...body, id }
+
+  return c.json(task)
 }
 
 export async function updateTaskById(c: Context) {
