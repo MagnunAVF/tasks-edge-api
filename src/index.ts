@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import { zValidator } from '@hono/zod-validator'
 import type { Connection } from '@planetscale/database'
 
 import { checkHealth } from './handlers/health'
@@ -11,6 +12,7 @@ import {
   updateTaskById,
 } from './handlers/tasks'
 import { connectDB } from './db/client'
+import { taskSchema } from './validators/tasks'
 
 // Env vars
 type Variables = {
@@ -37,9 +39,9 @@ app.get('/', checkHealth)
 
 app.get('/tasks', getTasks)
 app.get('/tasks/:id', getTaskById)
-app.post('/tasks', createTask)
-app.put('/tasks/:id', updateTaskById)
 app.delete('/tasks/:id', deleteTaskById)
+app.post('/tasks', zValidator('json', taskSchema), createTask)
+app.put('/tasks/:id', zValidator('json', taskSchema), updateTaskById)
 app.put('/tasks/:id/change-status', changeTaskStatus)
 
 export default app
