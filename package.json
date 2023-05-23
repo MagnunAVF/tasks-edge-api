@@ -6,8 +6,10 @@
     "format": "prettier --write \"**/*.{ts,tsx}\""
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.1.2",
     "@planetscale/database": "^1.7.0",
-    "hono": "^3.2.1"
+    "hono": "^3.2.1",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20221111.1",
