@@ -74,5 +74,15 @@ export async function changeTaskStatus(c: Context) {
   const id = c.req.param('id')
   const body = await c.req.json()
 
-  return c.json({ route: 'change task status', id, body })
+  const query = `UPDATE tasks
+    SET done = ${body.done} WHERE id = ${id};`
+  const data = await c.get('dbConn').execute(query)
+
+  if (data.rowsAffected !== 1) {
+    c.status(500)
+
+    return c.json({ error: 'Error in status update' })
+  } else {
+    return c.json({ success: "OK" })
+  }
 }

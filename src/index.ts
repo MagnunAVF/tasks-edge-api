@@ -12,7 +12,7 @@ import {
   updateTaskById,
 } from './handlers/tasks'
 import { connectDB } from './db/client'
-import { taskSchema } from './validators/tasks'
+import { taskSchema, updateTaskStatusSchema } from './validators/tasks'
 
 // Env vars
 type Variables = {
@@ -42,6 +42,10 @@ app.get('/tasks/:id', getTaskById)
 app.delete('/tasks/:id', deleteTaskById)
 app.post('/tasks', zValidator('json', taskSchema), createTask)
 app.put('/tasks/:id', zValidator('json', taskSchema), updateTaskById)
-app.put('/tasks/:id/change-status', changeTaskStatus)
+app.put(
+  '/tasks/:id/change-status',
+  zValidator('json', updateTaskStatusSchema),
+  changeTaskStatus
+)
 
 export default app

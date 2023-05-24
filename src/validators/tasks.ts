@@ -6,3 +6,7 @@ export const taskSchema = z.object({
   priority: z.number(),
   done: z.boolean(),
 })
+
+export const updateTaskStatusSchema = z.object({
+  done: z.boolean(),
+})
