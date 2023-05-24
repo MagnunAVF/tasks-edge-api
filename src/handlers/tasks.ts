@@ -34,7 +34,7 @@ export async function getTaskById(c: Context) {
 export async function createTask(c: Context) {
   const body = await c.req.json()
 
-  const query = `INSERT INTO tasks (title, description, priority, done) VALUES \
+  const query = `INSERT INTO tasks (title, description, priority, done) VALUES
     ('${body.title}', '${body.description}', ${body.priority}, ${body.done});`
   const data = await c.get('dbConn').execute(query)
   const id = parseInt(data.insertId)
@@ -47,7 +47,21 @@ export async function updateTaskById(c: Context) {
   const id = c.req.param('id')
   const body = await c.req.json()
 
-  return c.json({ route: 'get task', id, body })
+  const query = `UPDATE tasks
+    SET title = '${body.title}', description = '${body.description}',
+    priority = ${body.priority}, done = ${body.done}
+    WHERE id = ${id};`
+  const data = await c.get('dbConn').execute(query)
+
+  if (data.rowsAffected !== 1) {
+    c.status(500)
+
+    return c.json({ error: 'Error in update' })
+  } else {
+    const task = { ...body, id: parseInt(id) }
+
+    return c.json(task)
+  }
 }
 
 export async function deleteTaskById(c: Context) {
