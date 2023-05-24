@@ -66,8 +66,15 @@ export async function updateTaskById(c: Context) {
 
 export async function deleteTaskById(c: Context) {
   const id = c.req.param('id')
+  const query = `DELETE FROM tasks WHERE id = ${id};`
+  const data = await c.get('dbConn').execute(query)
+  if (data.rowsAffected !== 1) {
+    c.status(500)
 
-  return c.json({ route: 'delete task', id })
+    return c.json({ error: 'Error in delete task' })
+  } else {
+    return c.json({ success: "OK" })
+  }
 }
 
 export async function changeTaskStatus(c: Context) {
